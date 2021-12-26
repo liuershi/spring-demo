@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--    通过指定唯一ID和类的全限定名来创建bean对象-->
+    <!--<bean id="person" class="com.study.spring.basic.Person"/>
+    <bean id="person1" class="com.study.spring.basic.Person"/>-->
+
+    <!--测试不定义id默认的ID值是多少-->
+    <!--<bean class="com.study.spring.basic.Person"/>-->
+
+    <!--实际上，name等同于别名，通过别名可以获取到bean，同样的，别名也不允许重复-->
+    <!--id与name的区别是，name定义的别名可以有多个，通过","分割-->
+    <!--<bean id="person" name="p,personTest" class="com.study.spring.basic.Person"/>-->
+
+
+    <!--依赖注入-->
+    <bean id="person" class="com.study.spring.basic.Person">
+        <property name="name" value="zhangsan"/>
+        <property name="age" value="12"/>
+
+        <property name="alias">
+            <list>
+                <value>小张</value>
+                <value>张工</value>
+                <value>帅张</value>
+            </list>
+        </property>
+        <property name="phones">
+            <set>
+                <value>110</value>
+                <value>112</value>
+                <value>120</value>
+                <value>119</value>
+                <value>120</value>
+                <value>120</value>
+            </set>
+        </property>
+
+        <property name="attr">
+            <map>
+                <entry key="爱好" value="篮球"/>
+                <entry key="家庭住址" value="杭州"/>
+                <entry key="公司" value="海康威视"/>
+                <entry>
+                    <key><value>个人信息</value></key>
+                    <ref bean="personDetail"/>
+                </entry>
+            </map>
+        </property>
+
+        <!--properties属性设置-->
+        <property name="properties">
+            <props>
+                <prop key="height">180</prop>
+                <prop key="love">女</prop>
+                <prop key="year">2021</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="personDetail" class="com.study.spring.basic.PersonDetail">
+        <property name="address" value="浙江省杭州市萧山开发区"/>
+        <property name="gender" value="男"/>
+    </bean>
+
+
+    <!--构造注入-->
+    <bean id="consumer" class="com.study.spring.construct.Consumer">
+        <constructor-arg value="法外狂徒张三"/>
+        <constructor-arg value="26"/>
+    </bean>
+    <bean id="constructName" class="com.study.spring.construct.Consumer">
+        <constructor-arg value="李斯"/>
+    </bean>
+    <bean id="constructAge" class="com.study.spring.construct.Consumer">
+        <constructor-arg name="age" value="123"/>
+    </bean>
+</beans>
