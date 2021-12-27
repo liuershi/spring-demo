@@ -77,4 +77,21 @@
     <bean id="constructAge" class="com.study.spring.construct.Consumer">
         <constructor-arg name="age" value="123"/>
     </bean>
+
+    <!--FactoryBean工厂实现-->
+    <bean id="conn" class="com.study.spring.factorybean.ConnectionFactoryBean"/>
+
+    <!--实例工厂实现-->
+    <bean id="connectionFactory" class="com.study.spring.factorybean.ConnectionFactory"/>
+    <bean id="conn1" factory-bean="connectionFactory" factory-method="getConnection"/>
+
+    <!--静态工厂实现-->
+    <bean id="staticFactory" class="com.study.spring.factorybean.StaticConnectionFactory" factory-method="getConnection"/>
+
+    <!--测试不同对象scope，默认为singleton-->
+    <bean id="accountOne" class="com.study.spring.scope.Account" scope="singleton" init-method="testInit" destroy-method="customizeDestroy">
+        <property name="name" value="张三"/>
+        <property name="age" value="25"/>
+    </bean>
+    <bean id="accountTwo" class="com.study.spring.scope.Account" scope="prototype" init-method="testInit"/>
 </beans>
