@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
     <!--    通过指定唯一ID和类的全限定名来创建bean对象-->
     <!--<bean id="person" class="com.study.spring.basic.Person"/>
@@ -79,14 +80,14 @@
     </bean>
 
     <!--FactoryBean工厂实现-->
-    <bean id="conn" class="com.study.spring.factorybean.ConnectionFactoryBean"/>
+<!--    <bean id="conn" class="com.study.spring.factorybean.ConnectionFactoryBean"/>-->
 
     <!--实例工厂实现-->
-    <bean id="connectionFactory" class="com.study.spring.factorybean.ConnectionFactory"/>
-    <bean id="conn1" factory-bean="connectionFactory" factory-method="getConnection"/>
+<!--    <bean id="connectionFactory" class="com.study.spring.factorybean.ConnectionFactory"/>-->
+<!--    <bean id="conn1" factory-bean="connectionFactory" factory-method="getConnection"/>-->
 
     <!--静态工厂实现-->
-    <bean id="staticFactory" class="com.study.spring.factorybean.StaticConnectionFactory" factory-method="getConnection"/>
+<!--    <bean id="staticFactory" class="com.study.spring.factorybean.StaticConnectionFactory" factory-method="getConnection"/>-->
 
     <!--测试不同对象scope，默认为singleton-->
     <bean id="accountOne" class="com.study.spring.scope.Account" scope="singleton" init-method="testInit" destroy-method="customizeDestroy">
@@ -94,4 +95,18 @@
         <property name="age" value="25"/>
     </bean>
     <bean id="accountTwo" class="com.study.spring.scope.Account" scope="prototype" init-method="testInit"/>
+
+
+
+
+
+
+    <!--spring整合其他配置文件-->
+    <context:property-placeholder location="classpath:db.properties"/>
+    <bean id="dbConnection" class="com.study.spring.factorybean.ConnectionFactoryBean" lazy-init="true">
+        <property name="driverClassName" value="${db.driverClassName}"/>
+        <property name="url" value="${db.url}"/>
+        <property name="userName" value="${db.userName}"/>
+        <property name="password" value="${db.password}"/>
+    </bean>
 </beans>

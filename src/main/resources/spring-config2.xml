@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--spring创建DateConverter对象-->
+    <bean id="dateConverter" class="com.study.spring.converter.DateConverter">
+        <property name="pattern" value="yyyy-MM-dd"/>
+    </bean>
+
+    <!--将自定义类型转换器注册到spring中-->
+    <!--注意：声明该bean时，ID必须指明为conversionService，自定义的类型转换器注册失败-->
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <ref bean="dateConverter"/>
+            </set>
+        </property>
+    </bean>
+
+    <bean id="person" class="com.study.spring.converter.Person">
+        <property name="name" value="法外狂徒张三"/>
+        <!--spring提供日期格式的类型转换器默认支持的格式为yyyy/MM/dd，其他格式日期需自定义转换器-->
+        <property name="birthday" value="2021-12-28"/>
+    </bean>
+
+
+    <bean id="consumer" class="com.study.spring.postprocess.Consumer" init-method="customizeInit">
+        <property name="name" value="李斯"/>
+        <property name="age" value="26"/>
+    </bean>
+    <!--自定义的后置处理器-->
+    <bean id="consumerPostProcess" class="com.study.spring.postprocess.ConsumerBeanPostProcess"/>
+</beans>

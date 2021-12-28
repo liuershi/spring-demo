@@ -13,6 +13,43 @@ import java.sql.DriverManager;
  */
 public class ConnectionFactoryBean implements FactoryBean<Connection> {
 
+    private String driverClassName;
+    private String url;
+    private String userName;
+    private String password;
+
+    public String getDriverClassName() {
+        return driverClassName;
+    }
+
+    public void setDriverClassName(String driverClassName) {
+        this.driverClassName = driverClassName;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     /**
      * 实现FactoryBean接口后，我们通过将ConnectionFactoryBean定义在spring-config.xml转之后
      * ，再获取ConnectionFactoryBean实例时，会得到getObject()方法的返回值而不是ConnectionFactoryBean实例
@@ -22,8 +59,8 @@ public class ConnectionFactoryBean implements FactoryBean<Connection> {
      */
     @Override
     public Connection getObject() throws Exception {
-        Class.forName("com.mysql.jdbc.Connection");
-        Connection connection = DriverManager.getConnection("jdbc:mysql://192.168.13.13:3306", "root", "123456");
+        Class.forName(driverClassName);
+        Connection connection = DriverManager.getConnection(url, userName, password);
         return connection;
     }
 

@@ -1,12 +1,13 @@
 package com.study.spring.scope;
 
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
  * @author zhangwei151
  * @date 2021/12/26 18:29
  */
-public class Account implements InitializingBean {
+public class Account implements InitializingBean, DisposableBean {
     private String name;
     private Integer age;
 
@@ -52,5 +53,14 @@ public class Account implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         System.out.println("name = " + name);
         System.out.println("afterPropertiesSet");
+    }
+
+    /**
+     * 同初始化一样，可实现接口实现销毁调用.
+     * @throws Exception
+     */
+    @Override
+    public void destroy() throws Exception {
+        System.out.println("interface destroy");
     }
 }

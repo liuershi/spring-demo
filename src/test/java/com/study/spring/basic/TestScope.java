@@ -47,4 +47,16 @@ public class TestScope {
     public void test3() {
         Account account = (Account) applicationContext.getBean("accountOne");
     }
+
+    /**
+     * 测试工厂销毁调用自定义销毁方法
+     *      注意：销毁方法只有在bean的scope属性未singleton时才生效
+     */
+    @Test
+    public void test4() {
+        // 测试bean销毁时，调用工厂的close方法
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("spring-config.xml");
+        // 使用ApplicationContext接口时未提供close方法，而具体接口提供在子类中
+        context.close();
+    }
 }
