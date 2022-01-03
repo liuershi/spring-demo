@@ -1,5 +1,7 @@
 package com.study.spring.proxy.staticProxy;
 
+import com.study.spring.proxy.dynamicProxy.Log;
+
 /**
  * 原始类默认实现
  *
@@ -14,6 +16,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Log
     public boolean login(String username, String password) {
         System.out.println("UserServiceImpl.login");
         return false;

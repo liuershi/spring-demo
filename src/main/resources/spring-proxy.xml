@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--原始目标类-->
+    <bean id="userService" class="com.study.spring.proxy.staticProxy.UserServiceImpl"/>
+    <!--自定义额外功能，方法执行前执行额外功能-->
+<!--    <bean id="myAdvice" class="com.study.spring.proxy.dynamicProxy.MyMethodBeforeAdvice"/>-->
+    <!--自定义额外功能，通过实现MethodInterceptor在方法执行前后扩展-->
+    <bean id="myInterceptor" class="com.study.spring.proxy.dynamicProxy.MyMethodInterceptor"/>
+
+    <!--配置切入点-->
+    <aop:config>
+        <!--expression中声明的切入点是指任何返回值、任何方法名以及任何方法参数匹配-->
+<!--        <aop:pointcut id="myPoint" expression="execution(* *(..))"/>-->
+
+        <!--方法名为login的才执行-->
+<!--        <aop:pointcut id="myPoint" expression="execution(* *login(..))"/>-->
+        <!--方法名为login且有一个参数类型未String的方法才执行-->
+<!--        <aop:pointcut id="myPoint" expression="execution(* login(String))"/>-->
+        <!--方法名为login，且第一个参数类型为string，后面有0个甚至多个都行-->
+<!--        <aop:pointcut id="myPoint" expression="execution(* login(String, ..))"/>-->
+
+        <!--声明方法参数类型为User的方法可以执行
+        注意：非java.lang下的类在声明时需写类的全限定名，例如下面的User-->
+<!--        <aop:pointcut id="myPoint" expression="execution(* *(com.study.spring.proxy.staticProxy.User))"/>-->
+
+        <!--多个类中存在同名方法时，可以通过更精确方式指定，即 包.类.方法名(参数)-->
+<!--        <aop:pointcut id="myPoint" expression="execution(* com.study.spring.proxy.staticProxy.UserServiceImpl.register(com.study.spring.proxy.staticProxy.User))"/>-->
+
+
+        <!--以上方式都是精确到方法，当某个类中所有方法都需要配置时，可以不用每个配置，直接基于类来配置即可-->
+<!--        <aop:pointcut id="myPoint" expression="execution(* com.study.spring.proxy.staticProxy.UserServiceImpl.*(..))"/>-->
+
+        <!--当然，存在一种情况，对于某个名称的文件我们需要做aop，此时多个包下存在同名文件，想让这些文件同时生效可以泛化包路径，如下-->
+        <!--注意：此时我们会对于名称为UserServiceImpl类做增强，对于类名前面是两个点，代表多级目录，需要注意这点。-->
+<!--        <aop:pointcut id="myPoint" expression="execution(* *..UserServiceImpl.*(..))"/>-->
+
+
+        <!--基于某个包，对于其下面的子包以及类都作用，例如：com.study.spring.proxy下的所有类生效-->
+<!--        <aop:pointcut id="myPoint" expression="execution(* com.study.spring.proxy..*(..))"/>-->
+
+
+
+
+        <!--切入点函数:
+            除了execution以外别的切入点函数，其中execution最为强大，功能最全，其他函数只是其的子集
+        其他切入点函数主要是为了简化写法
+        -->
+        <!--args匹配的参数类型一致的方法，是对方法的切入，下面例子即两个参数类型为String的方法，对其他的不关心-->
+<!--        <aop:pointcut id="myPoint" expression="args(String, String)"/>-->
+        <!--within是对包和类的切入，如下例子是指对于名称为UserServiceImpl中的所有方法进行切入-->
+<!--        <aop:pointcut id="myPoint" expression="within(*..UserServiceImpl)"/>-->
+        <!--@annotation：用于扫描特殊注解最为切入点，一般适用我们自定义注解，然后指定使用了注解的方法开启额外功能-->
+<!--        <aop:pointcut id="myPoint" expression="@annotation(com.study.spring.proxy.dynamicProxy.Log)"/>-->
+
+
+
+
+        <!--为应对更为复杂情况，spring提供了切入点逻辑运算，包括and(与操作)和or(或操作)两个，见名知意，即切入点运算同时满足生效和其中之一满足生效-->
+        <!--and：下面例子的切入点必须满足方法名为login且方法参数为两个String类型
+            注意：对与操作而言，不能计算同种类型的切入点，例如下面这个
+        -->
+<!--        <aop:pointcut id="myPoint" expression="execution(* login(..)) and execution(* register(..))"/>-->
+<!--        <aop:pointcut id="myPoint" expression="execution(* login(..)) and args(String, String)"/>-->
+
+
+
+        <!--额外功能与对应的切入点-->
+<!--        <aop:advisor advice-ref="myInterceptor" pointcut-ref="myPoint"/>-->
+    </aop:config>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--通过工厂方式创建代理对象-->
+    <!--<bean id="userServiceTwo" class="com.study.spring.proxy.factory.UserServiceImpl"/>
+    <bean id="userServiceProxyFactory" class="com.study.spring.proxy.factory.UserServiceFactory"/>-->
+
+    <!--声明注解方式实现aop编程-->
+    <bean id="aspectUserService" class="com.study.spring.proxy.aspect.UserServiceImpl"/>
+    <bean id="myAspect" class="com.study.spring.proxy.aspect.MyAspect"/>
+    <!--通过注解的方式还需要使用该标签，意思指告知spring此时基于注解的方式开发aop-->
+    <!--默认的，注解是基于标准的JDK动态代理，可以通过设置proxy-target-class="true"开启CGlib的代理-->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+</beans>
